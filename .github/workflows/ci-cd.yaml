@@ -22,6 +22,9 @@ jobs:
       
       - name: Build application
         run: npm run build
+
+      - name: Run Lint
+        run: npm run lint
       
       - name: List dist output
         run: ls dist/
