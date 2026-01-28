@@ -26,8 +26,8 @@ export class CreateVehicleController {
       shortcode: req.body.shortcode,
       battery: req.body.battery,
       position: {
-        latitude: req.body.longitude,
-        longitude: req.body.latitude,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
       },
     });
 
