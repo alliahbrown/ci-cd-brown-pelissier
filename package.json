@@ -1,0 +1,34 @@
+{
+  "name": "ci-cd-brown-pelissier",
+  "version": "1.0.0",
+  "description": "- nodejs - docker",
+  "homepage": "https://github.com/alliahbrown/ci-cd-brown-pelissier#readme",
+  "bugs": {
+    "url": "https://github.com/alliahbrown/ci-cd-brown-pelissier/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alliahbrown/ci-cd-brown-pelissier.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf ./dist && tsc",
+    "start": "npm run build && node dist/index.js",
+    "start-db": "docker container run -d --name vehicle-database -e POSTGRES_USER=vehicle -e POSTGRES_PASSWORD=vehicle -e POSTGRES_DB=vehicle -p 5432:5432 postgis/postgis:16-3.4-alpine",
+    "stop-db": "docker container rm -f vehicle-database"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.1.0",
+    "@types/pg": "^8.16.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "express": "^5.0.1",
+    "pg": "^8.17.2"
+  }
+}
