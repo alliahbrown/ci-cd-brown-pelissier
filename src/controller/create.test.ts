@@ -13,7 +13,7 @@ import { AppError, ErrorCode } from '../errors';
 jest.mock('../store/vehicle', (() => ({
   VehicleStore: jest.fn().mockImplementation(() => {
     return {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       createVehicle: jest.fn().mockImplementation(async (req: any): Promise<Vehicle> => {
         return new Vehicle(
           12,

@@ -106,33 +106,33 @@ program
     }
   });
 
-// Find command
-program
-  .command('find')
-  .option('-l, --limit <n>', 'Limit', '10')
-  .option('--lat <latitude>', 'Latitude', '0')
-  .option('--lng <longitude>', 'Longitude', '0')
-  .action(async (opts) => {
-    try {
-      const req: any = {
-        body: {},
-        params: {},
-        query: {
-          limit: opts.limit,
-          latitude: opts.lat,
-          longitude: opts.lng
-        }
-      };
-      const res = new CliResponse() as unknown as Response;
+// // Find command
+// program
+//   .command('find')
+//   .option('-l, --limit <n>', 'Limit', '10')
+//   .option('--lat <latitude>', 'Latitude', '0')
+//   .option('--lng <longitude>', 'Longitude', '0')
+//   .action(async (opts) => {
+//     try {
+//       const req: any = {
+//         body: {},
+//         params: {},
+//         query: {
+//           limit: opts.limit,
+//           latitude: opts.lat,
+//           longitude: opts.lng
+//         }
+//       };
+//       const res = new CliResponse() as unknown as Response;
       
-      await findCtrl.handle(req, res);
-      await pool.end();
-    } catch (err: any) {
-      console.error('Error:', err.message);
-      await pool.end();
-      process.exit(1);
-    }
-  });
+//       await findCtrl.handle(req, res);
+//       await pool.end();
+//     } catch (err: any) {
+//       console.error('Error:', err.message);
+//       await pool.end();
+//       process.exit(1);
+//     }
+//   });
 
   // List all command
 program
