@@ -10,7 +10,7 @@ import { Response } from 'express';
 
 // CLI Response that implements necessary Express Response methods
 class CliResponse {
-  private statusCode: number = 200;
+  private statusCode = 200;
 
   status(code: number): this {
     this.statusCode = code;
@@ -34,9 +34,9 @@ class CliResponse {
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'vehicles',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
+  database: process.env.DB_NAME || 'vehicle',
+  user: process.env.DB_USER || 'vehicle',
+  password: process.env.DB_PASSWORD || 'vehicle',
 });
 
 const store = new VehicleStore(pool);
@@ -54,10 +54,10 @@ program
 // Create command
 program
   .command('create')
-  .option('-s, --shortcode <code>', 'Shortcode (4 chars)')
-  .option('-b, --battery <level>', 'Battery (0-100)', parseFloat)
-  .option('--lat <latitude>', 'Latitude', parseFloat)
-  .option('--lng <longitude>', 'Longitude', parseFloat)
+  .requiredOption('-s, --shortcode <code>', 'Shortcode (4 chars)')
+  .requiredOption('-b, --battery <level>', 'Battery (0-100)', parseFloat)
+  .requiredOption('--lat <latitude>', 'Latitude', parseFloat)
+  .requiredOption('--lng <longitude>', 'Longitude', parseFloat)
   .action(async (opts) => {
     try {
       const req: any = {
@@ -65,6 +65,7 @@ program
           shortcode: opts.shortcode,
           battery: opts.battery,
           latitude: opts.lat,
+
           longitude: opts.lng
         },
         params: {},
@@ -133,4 +134,29 @@ program
     }
   });
 
+  // List all command
+program
+  .command('list')
+  .option('-l, --limit <n>', 'Limit', '100')
+  .action(async (opts) => {
+    try {
+      const req: any = {
+        body: {},
+        params: {},
+        query: {
+          limit: opts.limit,
+          latitude: '0',
+          longitude: '0'
+        }
+      };
+      const res = new CliResponse() as unknown as Response;
+      
+      await findCtrl.handle(req, res);
+      await pool.end();
+    } catch (err: any) {
+      console.error('Error:', err.message);
+      await pool.end();
+      process.exit(1);
+    }
+  });
 program.parse();
