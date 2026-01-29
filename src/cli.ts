@@ -30,7 +30,7 @@ class CliResponse {
   }
 }
 
-// Initialize database pool and store
+// intialisation db
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
@@ -51,7 +51,7 @@ program
   .description('Vehicle management CLI')
   .version('1.0.0');
 
-// Create command
+// commande create
 program
   .command('create')
   .requiredOption('-s, --shortcode <code>', 'Shortcode (4 chars)')
@@ -85,7 +85,7 @@ program
     }
   });
 
-// Delete command
+// commande delete
 program
   .command('delete <id>')
   .action(async (id) => {
@@ -106,35 +106,8 @@ program
     }
   });
 
-// // Find command
-// program
-//   .command('find')
-//   .option('-l, --limit <n>', 'Limit', '10')
-//   .option('--lat <latitude>', 'Latitude', '0')
-//   .option('--lng <longitude>', 'Longitude', '0')
-//   .action(async (opts) => {
-//     try {
-//       const req: any = {
-//         body: {},
-//         params: {},
-//         query: {
-//           limit: opts.limit,
-//           latitude: opts.lat,
-//           longitude: opts.lng
-//         }
-//       };
-//       const res = new CliResponse() as unknown as Response;
-      
-//       await findCtrl.handle(req, res);
-//       await pool.end();
-//     } catch (err: any) {
-//       console.error('Error:', err.message);
-//       await pool.end();
-//       process.exit(1);
-//     }
-//   });
 
-  // List all command
+// commande list all
 program
   .command('list')
   .option('-l, --limit <n>', 'Limit', '100')
