@@ -6,7 +6,7 @@ export enum ErrorCode {
   RecordNotFound = 3
 };
 
-type ErrorDetails = any; // eslint-disable-line @typescript-eslint/no-explicit-any -- error details are NOT normalized!
+type ErrorDetails = any;  
 
 export class AppError extends Error {
   constructor(public readonly code: ErrorCode, public readonly message: string, public readonly details: ErrorDetails) {
