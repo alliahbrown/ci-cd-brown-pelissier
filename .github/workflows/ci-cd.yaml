@@ -1,7 +1,7 @@
 name: Vehicle Server CI
 on:
   - push
-
+  - pull_request
 jobs:
   ci:
     runs-on: ubuntu-24.04
@@ -12,13 +12,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: '22.x'
+          node-version: 22
       
       - name: Check Node Version
         run: node --version
       
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       
       - name: Build application
         run: npm run build
