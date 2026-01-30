@@ -2,11 +2,6 @@
 
 Client en ligne de commande pour interagir avec le vehicle-server.
 
-## Installation et utilisation
-
-### Prérequis
-- Docker
-- Node.js 20+ (pour le vehicle-server)
 ## Démarrage avec Docker
 
 ### 1. Lancer le serveur et la base de données
@@ -47,27 +42,6 @@ vehicle-cli list
 vehicle-cli delete <vehicle-id>
 ```
 
-## Workflow complet
-```bash
-# Terminal 1 : Démarrer le serveur
-cd ../vehicle-server
-npm run start
-
-# Terminal 2 : Utiliser le CLI
-cd ci-cd-brown-pelissier
-docker build -t vehicle-cli .
-alias vehicle-cli='docker run --rm --network host vehicle-cli --server http://localhost:8080'
-
-# Créer des véhicules
-vehicle-cli create --shortcode AUDI --battery 85 --lat 48.8566 --lng 2.3522
-vehicle-cli create --shortcode PEJO --battery 67 --lat 48.8738 --lng 2.2950
-vehicle-cli create --shortcode OPEL --battery 92 --lat 48.8606 --lng 2.3376
-vehicle-cli create --shortcode FORD --battery 78 --lat 48.8420 --lng 2.3200
-vehicle-cli create --shortcode FIAT --battery 54 --lat 48.8700 --lng 2.3100
-
-# Lister tout
-vehicle-cli list
-```
 
 ## Exemples de résultats
 
