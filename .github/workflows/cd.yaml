@@ -41,7 +41,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile.cli         
           push: true
           tags: |
-            alliahbw/vehicle-cli:${{ steps.tag.outputs.TAG }}
+            alliahbw/vehicle-cli:${{ github.ref_name }}
             alliahbw/vehicle-cli:latest
+          platforms: linux/amd64,linux/arm64
