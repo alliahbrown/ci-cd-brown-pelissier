@@ -1,6 +1,9 @@
 {
   "name": "ci-cd-brown-pelissier",
   "version": "1.0.0",
+  "bin": {
+    "vehicle-cli" : "./dist/cli.js"
+  },
   "description": "- nodejs - docker",
   "homepage": "https://github.com/alliahbrown/ci-cd-brown-pelissier#readme",
   "bugs": {
@@ -16,18 +19,20 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
+    "postbuild": "chmod +x dist/cli.js",
     "start": "npm run build && node dist/index.js",
     "start-db": "docker container run -d --name vehicle-database -e POSTGRES_USER=vehicle -e POSTGRES_PASSWORD=vehicle -e POSTGRES_DB=vehicle -p 5432:5432 postgis/postgis:16-3.4-alpine",
     "stop-db": "docker container rm -f vehicle-database",
     "lint": "npx eslint --fix ./src",
     "test": "jest ./src",
-    "cli" :  "ts-node ./src/cli.ts",
+    "cli": "ts-node ./src/cli.ts",
     "release": "npm run build"
     
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@testcontainers/postgresql": "^11.11.0",
+    "@types/axios": "^0.14.4",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.1.0",
@@ -37,13 +42,17 @@
     "eslint": "^9.39.2",
     "jest": "^30.2.0",
     "supertest": "^7.2.2",
+    "testcontainers": "^11.11.0",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.54.0",
+    "undici": "^6.23.0"
   },
   "dependencies": {
+    "axios": "^1.13.4",
     "express": "^5.0.1",
+    "commander": "^14.0.2",
     "pg": "^8.17.2"
   }
 }

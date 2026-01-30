@@ -1,135 +1,94 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { Pool } from 'pg';
-import { VehicleStore } from './store/vehicle';
-import { CreateVehicleController } from './controller/create';
-import { DeleteVehicleController } from './controller/delete';
-import { FindVehiclesController } from './controller/find';
-import { Response } from 'express';
+import axios from 'axios';
 
-// CLI Response that implements necessary Express Response methods
-class CliResponse {
-  private statusCode = 200;
-
-  status(code: number): this {
-    this.statusCode = code;
-    return this;
-  }
-
-  json(data: any): this {
-    console.log(JSON.stringify(data, null, 2));
-    return this;
-  }
-
-  send(): this {
-    if (this.statusCode === 204) {
-      console.log('Success');
-    }
-    return this;
-  }
-}
-
-// intialisation db
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'vehicle',
-  user: process.env.DB_USER || 'vehicle',
-  password: process.env.DB_PASSWORD || 'vehicle',
-});
-
-const store = new VehicleStore(pool);
-const createCtrl = new CreateVehicleController(store);
-const deleteCtrl = new DeleteVehicleController(store);
-const findCtrl = new FindVehiclesController(store);
 
 const program = new Command();
 
-program
-  .name('vehicle')
-  .description('Vehicle management CLI')
-  .version('1.0.0');
 
-// commande create
+// connexion serveur
+program
+  .name('vehicle-cli')
+  .description('Vehicle management CLI')
+  .version('1.0.0')
+  .requiredOption('-s, --server <url>', 'Server URL', 'http://localhost:8080');
+
+
+
+//commande create
 program
   .command('create')
-  .requiredOption('-s, --shortcode <code>', 'Shortcode (4 chars)')
-  .requiredOption('-b, --battery <level>', 'Battery (0-100)', parseFloat)
+  .requiredOption('--shortcode <code>', 'Shortcode (4 chars)')
+  .requiredOption('--battery <level>', 'Battery (0-100)', parseFloat)
   .requiredOption('--lat <latitude>', 'Latitude', parseFloat)
   .requiredOption('--lng <longitude>', 'Longitude', parseFloat)
   .action(async (opts) => {
+    const serverUrl = program.opts().server;
+    
     try {
-      const req: any = {
-        body: {
-          shortcode: opts.shortcode,
-          battery: opts.battery,
-          latitude: opts.lat,
-
-          longitude: opts.lng
-        },
-        params: {},
-        query: {}
-      };
-      const res = new CliResponse() as unknown as Response;
+      const response = await axios.post(`${serverUrl}/vehicles`, {
+        shortcode: opts.shortcode,
+        battery: opts.battery,
+        latitude: opts.lat,
+        longitude: opts.lng
+      });
       
-      await createCtrl.handle(req, res);
-      await pool.end();
-    } catch (err: any) {
-      console.error('Error:', err.message);
-      if (err.details?.violations) {
-        err.details.violations.forEach((v: string) => console.error('  -', v));
+      console.log('Vehicle created:');
+      console.log(JSON.stringify(response.data, null, 2));
+    } catch (error: any) {
+      console.error('Error:', error.response?.data?.message || error.message);
+      
+      if (error.response?.data?.details?.violations) {
+        error.response.data.details.violations.forEach((v: string) => 
+          console.error('  -', v)
+        );
       }
-      await pool.end();
-      process.exit(1);
-    }
-  });
-
-// commande delete
-program
-  .command('delete <id>')
-  .action(async (id) => {
-    try {
-      const req: any = {
-        body: {},
-        params: { id },
-        query: {}
-      };
-      const res = new CliResponse() as unknown as Response;
-      
-      await deleteCtrl.handle(req, res);
-      await pool.end();
-    } catch (err: any) {
-      console.error('Error:', err.message);
-      await pool.end();
       process.exit(1);
     }
   });
 
 
-// commande list all
+
+// Commande list all
 program
   .command('list')
   .option('-l, --limit <n>', 'Limit', '100')
   .action(async (opts) => {
+    const serverUrl = program.opts().server;
+    
     try {
-      const req: any = {
-        body: {},
-        params: {},
-        query: {
+      const response = await axios.get(`${serverUrl}/vehicles`, {
+        params: {
           limit: opts.limit,
-          latitude: '0',
-          longitude: '0'
+          latitude: 0,
+          longitude: 0
         }
-      };
-      const res = new CliResponse() as unknown as Response;
+      });
       
-      await findCtrl.handle(req, res);
-      await pool.end();
-    } catch (err: any) {
-      console.error('Error:', err.message);
-      await pool.end();
+      console.log('Vehicles:');
+      console.log(JSON.stringify(response.data, null, 2));
+    } catch (error: any) {
+      console.error('Error:', error.response?.data?.message || error.message);
       process.exit(1);
     }
   });
+
+// Commande delete
+program
+  .command('delete <id>')
+  .action(async (id) => {
+    const serverUrl = program.opts().server;
+    
+    try {
+      await axios.delete(`${serverUrl}/vehicles/${id}`);
+      console.log(`Vehicle ${id} deleted successfully`);
+    } catch (error: any) {
+      console.error('Error:', error.response?.data?.message || error.message);
+      process.exit(1);
+    }
+  });
+
+
+
 program.parse();
