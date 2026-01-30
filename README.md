@@ -7,34 +7,22 @@ Client en ligne de commande pour interagir avec le vehicle-server.
 ### Prérequis
 - Docker
 - Node.js 20+ (pour le vehicle-server)
+## Démarrage avec Docker
 
-### Démarrage
-
-#### 1. Démarrer le vehicle-server
-
-Dans un terminal séparé :
+### 1. Lancer le serveur et la base de données
 ```bash
-cd ../vehicle-server  # ou le chemin vers votre vehicle-server
-npm install
-npm run start
+docker-compose up
 ```
 
-Le serveur devrait démarrer sur http://localhost:8080
+Le serveur démarrera sur http://localhost:8080
 
-#### 2. Builder l'image Docker du CLI
+### 2. Utiliser le CLI (dans un autre terminal)
 ```bash
-docker build -t vehicle-cli .
-```
+# Builder le CLI
+docker build -f Dockerfile.cli -t vehicle-cli .
 
-#### 3. Créer l'alias
-```bash
+# Créer l'alias
 alias vehicle-cli='docker run --rm --network host vehicle-cli --server http://localhost:8080'
-```
-
-Pour le rendre permanent :
-```bash
-echo "alias vehicle-cli='docker run --rm --network host vehicle-cli --server http://localhost:8080'" >> ~/.bashrc
-source ~/.bashrc
 ```
 
 ### Utilisation
