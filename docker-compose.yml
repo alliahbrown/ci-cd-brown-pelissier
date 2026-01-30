@@ -12,10 +12,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U vehicle"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U vehicle -d vehicle"]
+      interval: 2s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   server:
     build:
@@ -32,6 +32,9 @@ services:
       DB_USER: vehicle
       DB_PASSWORD: vehicle
       DB_NAME: vehicle
+    # Ajout d'un délai supplémentaire
+    command: sh -c "sleep 5 && node dist/index.js"
+    restart: on-failure
 
 volumes:
   postgres_data:
