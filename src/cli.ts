@@ -1,11 +1,8 @@
 #!/usr/bin/env node
-
 import { Command } from 'commander';
 import axios from 'axios';
 
-
 const program = new Command();
-
 
 // connexion serveur
 program
@@ -14,13 +11,11 @@ program
   .version('1.0.0')
   .requiredOption('-s, --server <url>', 'Server URL', 'http://localhost:8080');
 
-
-
-//commande create
+// Commande create
 program
   .command('create')
-  .requiredOption('--shortcode <code>', 'Shortcode (4 chars)')
-  .requiredOption('--battery <level>', 'Battery (0-100)', parseFloat)
+  .requiredOption('-s, --shortcode <code>', 'Shortcode (4 chars)')
+  .requiredOption('-b, --battery <level>', 'Battery (0-100)', parseFloat)
   .requiredOption('--lat <latitude>', 'Latitude', parseFloat)
   .requiredOption('--lng <longitude>', 'Longitude', parseFloat)
   .action(async (opts) => {
@@ -34,23 +29,37 @@ program
         longitude: opts.lng
       });
       
-      console.log('Vehicle created:');
+      console.log('Vehicle created successfully:');
       console.log(JSON.stringify(response.data, null, 2));
-    } catch (error: any) {
-      console.error('Error:', error.response?.data?.message || error.message);
       
-      if (error.response?.data?.details?.violations) {
-        error.response.data.details.violations.forEach((v: string) => 
-          console.error('  -', v)
-        );
+    } catch (error: any) {
+      if (error.response) {
+        console.error('Could not create the vehicle');
+        
+        const errorData = error.response.data?.error;
+        
+        if (errorData?.message) {
+          console.error(`  ${errorData.message}`);
+        }
+        
+        if (errorData?.details?.violations) {
+          errorData.details.violations.forEach((violation: string) => {
+            console.error(`  - ${violation}`);
+          });
+        }
+        
+      } else if (error.request) {
+        console.error('Could not connect to the server');
+        console.error(`  Make sure the server is running at ${serverUrl}`);
+      } else {
+        console.error('Error:', error.message);
       }
+      
       process.exit(1);
     }
   });
 
-
-
-// Commande list all
+// Commande list
 program
   .command('list')
   .option('-l, --limit <n>', 'Limit', '100')
@@ -68,6 +77,7 @@ program
       
       console.log('Vehicles:');
       console.log(JSON.stringify(response.data, null, 2));
+      
     } catch (error: any) {
       console.error('Error:', error.response?.data?.message || error.message);
       process.exit(1);
@@ -83,12 +93,11 @@ program
     try {
       await axios.delete(`${serverUrl}/vehicles/${id}`);
       console.log(`Vehicle ${id} deleted successfully`);
+      
     } catch (error: any) {
       console.error('Error:', error.response?.data?.message || error.message);
       process.exit(1);
     }
   });
-
-
 
 program.parse();
