@@ -24,7 +24,6 @@
     "start-db": "docker container run -d --name vehicle-database -e POSTGRES_USER=vehicle -e POSTGRES_PASSWORD=vehicle -e POSTGRES_DB=vehicle -p 5432:5432 postgis/postgis:16-3.4-alpine",
     "stop-db": "docker container rm -f vehicle-database",
     "lint": "npx eslint --fix ./src",
-    "prepare": "npm run build",
     "test": "jest ./src",
     "cli": "ts-node ./src/cli.ts"
   },
@@ -51,6 +50,7 @@
   "dependencies": {
     "axios": "^1.13.4",
     "express": "^5.0.1",
+    "commander": "^14.0.2",
     "pg": "^8.17.2"
   }
 }
