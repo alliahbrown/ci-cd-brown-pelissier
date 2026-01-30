@@ -41,7 +41,19 @@ vehicle-cli list
 # Supprimer un véhicule
 vehicle-cli delete <vehicle-id>
 ```
+### Cas de mauvaise utilisation
 
+
+```bash
+vehicle-cli create --shortcode ABCDEF --battery 85 --lat 48.8566 --lng 2.3522
+```
+
+```bash
+vehicle-cli create --shortcode AUDI --battery 150 --lat 48.8566 --lng 2.3522
+```
+```bash
+vehicle-cli create --shortcode AUDI --battery 85 --lat 95 --lng 2.3522
+```
 
 ## Exemples de résultats
 
