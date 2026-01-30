@@ -1,6 +1,9 @@
 {
   "name": "ci-cd-brown-pelissier",
   "version": "1.0.0",
+  "bin": {
+    "vehicle-cli" : "./dist/cli.js"
+  },
   "description": "- nodejs - docker",
   "homepage": "https://github.com/alliahbrown/ci-cd-brown-pelissier#readme",
   "bugs": {
@@ -16,10 +19,12 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
+    "postbuild": "chmod +x dist/cli.js",
     "start": "npm run build && node dist/index.js",
     "start-db": "docker container run -d --name vehicle-database -e POSTGRES_USER=vehicle -e POSTGRES_PASSWORD=vehicle -e POSTGRES_DB=vehicle -p 5432:5432 postgis/postgis:16-3.4-alpine",
     "stop-db": "docker container rm -f vehicle-database",
     "lint": "npx eslint --fix ./src",
+    "prepare": "npm run build",
     "test": "jest ./src",
     "cli": "ts-node ./src/cli.ts"
   },
