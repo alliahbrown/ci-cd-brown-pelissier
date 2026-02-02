@@ -12,34 +12,35 @@ docker-compose up
 Le serveur démarrera sur http://localhost:8080
 
 ### 2. Utiliser le CLI (dans un autre terminal)
+#### Il est aussi possible de mettre l'adresse du serveur dans l'alias pour simplifier les commandes !
 ```bash
 # Builder le CLI
 docker build -f Dockerfile.cli -t vehicle-cli .
 
 # Créer l'alias
-alias vehicle-cli='docker run --rm --network host vehicle-cli --server http://localhost:8080'
+alias vehicle-cli='docker run --rm --network host vehicle-cli'
 ```
 
 ### Utilisation
 ```bash
 # Afficher l'aide
-vehicle-cli --help
+vehicle-cli --server http://localhost:8080 --help
 
 # Lister les véhicules
-vehicle-cli list
+vehicle-cli --server http://localhost:8080 list
 
 # Créer des véhicules
-vehicle-cli create --shortcode AUDI --battery 85 --lat 48.8566 --lng 2.3522
-vehicle-cli create --shortcode PEJO --battery 67 --lat 48.8738 --lng 2.2950
-vehicle-cli create --shortcode OPEL --battery 92 --lat 48.8606 --lng 2.3376
-vehicle-cli create --shortcode FORD --battery 78 --lat 48.8420 --lng 2.3200
-vehicle-cli create --shortcode FIAT --battery 54 --lat 48.8700 --lng 2.3100
+vehicle-cli --server http://localhost:8080 create --shortcode AUDI --battery 85 --lat 48.8566 --lng 2.3522
+vehicle-cli --server http://localhost:8080 create --shortcode PEJO --battery 67 --lat 48.8738 --lng 2.2950
+vehicle-cli --server http://localhost:8080 create --shortcode OPEL --battery 92 --lat 48.8606 --lng 2.3376
+vehicle-cli --server http://localhost:8080 create --shortcode FORD --battery 78 --lat 48.8420 --lng 2.3200
+vehicle-cli --server http://localhost:8080 create --shortcode FIAT --battery 54 --lat 48.8700 --lng 2.3100
 
 # Vérifier la création
-vehicle-cli list
+vehicle-cli --server http://localhost:8080 list
 
 # Supprimer un véhicule
-vehicle-cli delete <vehicle-id>
+vehicle-cli --server http://localhost:8080 delete <vehicle-id>
 ```
 ### Cas de mauvaise utilisation
 
